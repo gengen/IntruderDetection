@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 
 class CameraPreview implements SurfaceHolder.Callback {
-    public static final String TAG = "ContShooting";
     Camera mCamera = null;
     Context mContext = null;
 
@@ -104,7 +103,7 @@ class CameraPreview implements SurfaceHolder.Callback {
     	try {
             mCamera.setPreviewDisplay(holder);               
         } catch (IOException e) {
-            Log.e(TAG, "IOException in surfaceCreated");
+            Log.e(IntruderDetectionActivity.TAG, "IOException in surfaceCreated");
             mCamera.release();
             mCamera = null;
         }

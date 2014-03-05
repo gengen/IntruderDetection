@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">侵入検知</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="pref_switch_on">ON</string>
+    <string name="pref_switch_off">OFF</string>
+    <string name="pref_switch_title">侵入を検知</string>
+
+    <string name="pref_gallery_title">侵入者を確認</string>
+    <string name="pref_gallery_summary">ギャラリーを起動して撮影画像を見る</string>
+</resources>

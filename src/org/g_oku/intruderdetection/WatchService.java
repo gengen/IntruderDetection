@@ -1,6 +1,5 @@
 package org.g_oku.intruderdetection;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -24,6 +23,8 @@ public class WatchService extends Service {
     private WindowManager mWindowMgr;
     private View mOverLayView;
     
+    private int mID;
+    
     SurfaceHolder mHolder;
     SurfaceView mSurface;
     private CameraPreview mPreview;
@@ -36,11 +37,12 @@ public class WatchService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
+		mID = startId;
 		setLayer();
-		displayNotificationArea();
+		//TODO Notificationへの表示は要検討
+		//displayNotificationArea();
         mResolver = getApplicationContext().getContentResolver();
 
-        //mSurface = (SurfaceView)((Activity)getApplicationContext()).findViewById(R.id.camera);
 		mSurface = (SurfaceView)mOverLayView.findViewById(R.id.camera);
         mHolder = mSurface.getHolder();
 
@@ -74,7 +76,7 @@ public class WatchService extends Service {
         //builder.setSmallIcon(R.drawable.ic_lock_lock);
         builder.setContentTitle(getString(R.string.app_name));
         //builder.setContentText(getString(R.string.notification_message));
-        //要確認
+        //TODO 要確認
         //builder.setOngoing(true);
         
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -84,23 +86,28 @@ public class WatchService extends Service {
     public void saveGallery(ContentValues values){
 		mResolver.insert(Media.EXTERNAL_CONTENT_URI, values);
 		
-		//どこかに移動
-		mWindowMgr.removeView(mOverLayView);
+		//TODO どこかに移動
+		//mWindowMgr.removeView(mOverLayView);
     }
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
+	
+	public void stop(){
+		mWindowMgr.removeView(mOverLayView);
+		stopSelf(mID);        
+	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
+		/*
 		//Notificationを非表示
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         manager.cancel(R.string.app_name);
-        
-		mWindowMgr.removeView(mOverLayView);
+        */
 	}
 }

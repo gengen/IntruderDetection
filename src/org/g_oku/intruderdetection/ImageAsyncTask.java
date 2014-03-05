@@ -61,6 +61,7 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bmp) {
+        ((WatchService)mContext).stop();
     }
     
     // YUV420 to BMP 
@@ -94,7 +95,7 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
     public void savedata(byte[] data){
         File mFile = null;
         if(mFile == null){
-            mFile = new File(Environment.getExternalStorageDirectory(), "/ContShooting");
+            mFile = new File(Environment.getExternalStorageDirectory(), "/Intruder");
         }
 
         FileOutputStream fos = null;
@@ -133,7 +134,7 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
         //values.put(Images.Media.DISPLAY_NAME,strFile);
         values.put(Images.Media.DATE_ADDED, date);
         values.put(Images.Media.DATE_TAKEN, date);
-        values.put(Images.Media.DATE_MODIFIED, date);
+        //values.put(Images.Media.DATE_MODIFIED, date);
         //values.put(Images.Media.DESCRIPTION,"");
         //values.put(Images.Media.LATITUDE,0.0);
         //values.put(Images.Media.LONGITUDE,0.0);

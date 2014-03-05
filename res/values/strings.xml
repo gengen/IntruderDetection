@@ -5,4 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <string name="pref_switch_on">ON</string>
+    <string name="pref_switch_off">OFF</string>
+    <string name="pref_switch_title">Detect intruder</string>    
+    
+    <string name="pref_gallery_title">Check intruder</string>
+    <string name="pref_gallery_summary">Launch gallery and check photo</string>
 </resources>
