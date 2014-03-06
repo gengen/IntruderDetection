@@ -6,12 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.hardware.Camera.Size;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore.Images;
 import android.util.Log;
@@ -44,7 +48,10 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
         //回転
         Matrix matrix = new Matrix();
         // 回転させる角度を指定
-        matrix.postRotate(270.0f);
+        if(isPhone()){
+        	matrix.postRotate(90.0f);
+        }
+
         retBmp = Bitmap.createBitmap(bmp[0], 0, 0, bmp[0].getWidth(), bmp[0].getHeight(), matrix, true);
         bmp[0].recycle();
         bmp[0] = null;
@@ -62,6 +69,25 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bmp) {
         ((WatchService)mContext).stop();
+    }
+    
+    @SuppressLint("NewApi")
+	private boolean isPhone(){
+    	Resources r = mContext.getResources();
+    	Configuration configuration = r.getConfiguration();
+    	if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+    		if ((configuration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+    				< Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    			return true;
+    		}
+
+    	} else {
+    		if (configuration.smallestScreenWidthDp < 600) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
     
     // YUV420 to BMP 

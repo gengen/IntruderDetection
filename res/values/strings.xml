@@ -3,7 +3,10 @@
 
     <string name="app_name">IntruderDetection</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_error_message">申し訳ありませんが、フロントカメラが無い機種ではご利用になれません。</string>
+    <string name="dialog_error_ok">Finish</string>
 
     <string name="pref_switch_on">ON</string>
     <string name="pref_switch_off">OFF</string>

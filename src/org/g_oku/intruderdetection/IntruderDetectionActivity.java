@@ -1,9 +1,13 @@
 package org.g_oku.intruderdetection;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +29,22 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//フロントカメラ検出
+		if(!checkFrontCamera()){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.dialog_error_title));
+			builder.setMessage(getString(R.string.dialog_error_message));
+		    builder.setPositiveButton(R.string.dialog_error_ok, new DialogInterface.OnClickListener() {
+		    	public void onClick(DialogInterface dialog, int whichButton) {
+		    		finish();
+		    	}
+		    });
+		    AlertDialog dialog = builder.show();
+		    //ダイアログ画面外を押された際に閉じないように設定
+		    dialog.setCanceledOnTouchOutside(false);
+		    return;
+		}
+		
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			addPreferencesFromResource(R.xml.preference);
 		    PreferenceScreen nextMove1 = (PreferenceScreen)findPreference("gallery");
@@ -43,6 +63,20 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 			getFragmentManager().beginTransaction().replace(android.R.id.content,
 					new SettingFragment()).commit();
 		}
+	}
+	
+	private boolean checkFrontCamera(){
+		int num = Camera.getNumberOfCameras();
+		for(int i=0; i<num; i++){
+			CameraInfo caminfo = new CameraInfo();
+			Camera.getCameraInfo(i, caminfo);
+		
+			if(caminfo.facing == CameraInfo.CAMERA_FACING_FRONT){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -105,7 +139,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	        	        	catch(ActivityNotFoundException e4){
 	        	    	    	intent = new Intent(Intent.ACTION_PICK);
 	        	    	    	intent.setType("image/*");
-	        	    	    	startActivity(intent);	        	        	}
+	        	    	    	startActivity(intent);
+	        	        	}
 	    	        	}
 	    	        }
 	    	    }
@@ -118,12 +153,6 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     }
     
     private void startGalleryPreGB(){
-    	//ギャラリーへのintent
-    	//Intent intent = new Intent(Intent.ACTION_PICK);
-    	//intent.setType("image/*");
-    	//startActivityForResult(intent, REQUEST_PICK_CONTACT);
-    	//startActivity(intent);
-    	
     	// ギャラリー表示
     	Intent intent = null;
     	try{
@@ -165,7 +194,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
         	        	catch(ActivityNotFoundException e4){
         	    	    	intent = new Intent(Intent.ACTION_PICK);
         	    	    	intent.setType("image/*");
-        	    	    	startActivity(intent);	        	        	}
+        	    	    	startActivity(intent);
+        	        	}
     	        	}
     	        }
     	    }

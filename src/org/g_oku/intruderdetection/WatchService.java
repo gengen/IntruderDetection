@@ -76,7 +76,6 @@ public class WatchService extends Service {
         //builder.setSmallIcon(R.drawable.ic_lock_lock);
         builder.setContentTitle(getString(R.string.app_name));
         //builder.setContentText(getString(R.string.notification_message));
-        //TODO 要確認
         //builder.setOngoing(true);
         
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -85,9 +84,6 @@ public class WatchService extends Service {
     
     public void saveGallery(ContentValues values){
 		mResolver.insert(Media.EXTERNAL_CONTENT_URI, values);
-		
-		//TODO どこかに移動
-		//mWindowMgr.removeView(mOverLayView);
     }
 	
 	@Override

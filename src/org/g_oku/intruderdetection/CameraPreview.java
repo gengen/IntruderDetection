@@ -16,14 +16,20 @@ package org.g_oku.intruderdetection;
  * limitations under the License.
  */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
 
+import android.os.Build;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +57,23 @@ class CameraPreview implements SurfaceHolder.Callback {
 	int mWidth = 0;
 	int mHeight = 0;
 		
-    CameraPreview(Context context){
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	CameraPreview(Context context){
         mContext = context;
+        
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+			mWidth = display.getWidth();
+			mHeight = display.getHeight();
+		}
+		else{
+			Point size = new Point();
+			display.getSize(size);
+
+			mWidth = size.x;
+			mHeight = size.y;
+		}
 	}
     
     public void surfaceCreated(SurfaceHolder holder) {
@@ -60,22 +81,9 @@ class CameraPreview implements SurfaceHolder.Callback {
 
     	if(mCamera == null){
     	    try{
-    	    	//TODO フロントカメラが無い場合をチェック
-                mCamera = Camera.open(1);
+                mCamera = Camera.open(getFrontCameraNo());
     	        
     	    }catch(RuntimeException e){
-    	    	/*
-    	        new AlertDialog.Builder(mContext)
-    	        .setTitle(R.string.sc_error_title)
-    	        .setMessage(mContext.getString(R.string.sc_error_cam))
-    	        .setPositiveButton(R.string.sc_error_cam_ok, new DialogInterface.OnClickListener() {
-    	            public void onClick(DialogInterface dialog, int which) {
-    	                System.exit(0);
-    	            }
-    	        })
-    	        .show();
-    	        */
-    	            
     	        try {
     	            this.finalize();
     	        } catch (Throwable t) {
@@ -109,6 +117,20 @@ class CameraPreview implements SurfaceHolder.Callback {
         }
     }
     
+	private int getFrontCameraNo(){
+		int num = Camera.getNumberOfCameras();
+		for(int i=0; i<num; i++){
+			CameraInfo caminfo = new CameraInfo();
+			Camera.getCameraInfo(i, caminfo);
+		
+			if(caminfo.facing == CameraInfo.CAMERA_FACING_FRONT){
+				return i;
+			}
+		}
+		
+		return 0;
+	}
+    
     private void createSupportList(){
         if(mCamera == null){
             return;
@@ -135,8 +157,6 @@ class CameraPreview implements SurfaceHolder.Callback {
                 break;
             }
             
-            //Log.d(TAG, "size = " + mSize.width + "*" + mSize.height);
-
             if(mSize == null){
                 mSize = mSupportList.get(0);
                 mOffset = 0;

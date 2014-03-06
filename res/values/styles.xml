@@ -14,7 +14,7 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
+        <item name="switchStyle">@style/Widget.Holo.Light.CompoundButton.Switch</item>
         <item name="switchPreferenceStyle">@style/Preference.SwitchPreference</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
