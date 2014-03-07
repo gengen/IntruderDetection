@@ -93,12 +93,18 @@ public class WatchService extends Service {
 	
 	public void stop(){
 		mWindowMgr.removeView(mOverLayView);
+		mWindowMgr = null;
+		mOverLayView = null;
 		stopSelf(mID);        
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
+		if(mWindowMgr != null && mOverLayView != null){
+			mWindowMgr.removeView(mOverLayView);
+		}
 
 		/*
 		//Notificationを非表示

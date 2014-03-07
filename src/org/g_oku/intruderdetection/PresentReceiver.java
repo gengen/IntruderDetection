@@ -12,7 +12,7 @@ public class PresentReceiver extends BroadcastReceiver {
 
 		if(IntruderDetectionActivity.DEBUG){
 			String switchFlag = flag ? "on" : "off";
-			Log.d(IntruderDetectionActivity.TAG, "flag = " + switchFlag);
+			//Log.d(IntruderDetectionActivity.TAG, "flag = " + switchFlag);
 		}
 
 		if(flag){

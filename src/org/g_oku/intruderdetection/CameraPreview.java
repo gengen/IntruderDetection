@@ -87,7 +87,7 @@ class CameraPreview implements SurfaceHolder.Callback {
     	        try {
     	            this.finalize();
     	        } catch (Throwable t) {
-    	            System.exit(0);                 
+    	            ((WatchService)mContext).stop();        
     	        }
     	        return;
     	    }
@@ -96,7 +96,7 @@ class CameraPreview implements SurfaceHolder.Callback {
                 try {
                     this.finalize();
                 } catch (Throwable t) {
-                    System.exit(0);                 
+    	            ((WatchService)mContext).stop();        
                 }
                 return;
     	    }
@@ -114,6 +114,7 @@ class CameraPreview implements SurfaceHolder.Callback {
             Log.e(IntruderDetectionActivity.TAG, "IOException in surfaceCreated");
             mCamera.release();
             mCamera = null;
+            ((WatchService)mContext).stop();
         }
     }
     
@@ -174,6 +175,7 @@ class CameraPreview implements SurfaceHolder.Callback {
         
         //Cameraがopen()できなかったとき用
         if(mCamera == null){
+            ((WatchService)mContext).stop();
             return;
         }
 
@@ -266,7 +268,7 @@ class CameraPreview implements SurfaceHolder.Callback {
         }
 
         public void onPreviewFrame(byte[] data, Camera camera) {
-        	Log.d("IntruderDetection", "onPreviewFrame");
+        	//Log.d("IntruderDetection", "onPreviewFrame");
             //一旦コールバックを止める
         	camera.setPreviewCallback(null);
 

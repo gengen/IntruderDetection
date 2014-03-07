@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class IntruderDetectionActivity extends PreferenceActivity {
 	public static final String TAG = "IntruderDetection";
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@SuppressWarnings("deprecation")

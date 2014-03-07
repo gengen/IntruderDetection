@@ -35,7 +35,7 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Bitmap... bmp) {
-    	Log.d("IntruderDetection", "start doInBackgroud");
+    	//Log.d("IntruderDetection", "start doInBackgroud");
     	Bitmap retBmp;
         
         final int width = mSize.width;
@@ -49,7 +49,7 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
         Matrix matrix = new Matrix();
         // 回転させる角度を指定
         if(isPhone()){
-        	matrix.postRotate(90.0f);
+        	matrix.postRotate(270.0f);
         }
 
         retBmp = Bitmap.createBitmap(bmp[0], 0, 0, bmp[0].getWidth(), bmp[0].getHeight(), matrix, true);
