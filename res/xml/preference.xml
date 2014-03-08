@@ -18,5 +18,5 @@
 	<Preference 
 		android:selectable="true"
 	    android:layout="@layout/ad"/>
-
+	
 </PreferenceScreen>

@@ -12,10 +12,12 @@ import android.os.IBinder;
 import android.provider.MediaStore.Images.Media;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 
 public class WatchService extends Service {
@@ -56,9 +58,8 @@ public class WatchService extends Service {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         mOverLayView = layoutInflater.inflate(R.layout.overlay, null);
         mParams = new WindowManager.LayoutParams(
-                /*WindowManager.LayoutParams.WRAP_CONTENT*/1,
-                /*WindowManager.LayoutParams.WRAP_CONTENT*/1,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                1, 1, 
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
         mWindowMgr.addView(mOverLayView, mParams);
@@ -95,7 +96,7 @@ public class WatchService extends Service {
 		mWindowMgr.removeView(mOverLayView);
 		mWindowMgr = null;
 		mOverLayView = null;
-		stopSelf(mID);        
+		stopSelf(mID);
 	}
 
 	@Override

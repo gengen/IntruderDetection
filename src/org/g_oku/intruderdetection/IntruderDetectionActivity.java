@@ -2,6 +2,8 @@ package org.g_oku.intruderdetection;
 
 import java.io.File;
 
+import org.jraf.android.backport.switchwidget.SwitchPreference;
+
 import com.ad_stir.interstitial.AdstirInterstitial.AdstirInterstitialDialogListener;
 
 import android.annotation.TargetApi;
@@ -10,18 +12,21 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import android.view.KeyEvent;
 
 public class IntruderDetectionActivity extends PreferenceActivity {
 	public static final String TAG = "IntruderDetection";
@@ -54,8 +59,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			addPreferencesFromResource(R.xml.preference);
-		    PreferenceScreen nextMove1 = (PreferenceScreen)findPreference("gallery");
-		    nextMove1.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		    PreferenceScreen galleryPref = (PreferenceScreen)findPreference("gallery");
+		    galleryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		        @Override
 		        public boolean onPreferenceClick(Preference preference) {
 		        	if(DEBUG){
@@ -65,10 +70,31 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		            return true;
 		        }
 		    });
+		    
+		    SwitchPreference switchPref = (SwitchPreference)findPreference("switch");
+		    switchPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					if(DEBUG){
+						Log.d(TAG, "value = " + ((SwitchPreference)preference).isChecked());
+					}
+					//OFFにした際にサービスを終了
+					//なぜかOFFでtrueが帰る
+					if(((SwitchPreference)preference).isChecked()){
+						if(DEBUG){
+							Log.d(TAG, "stop service");
+						}						
+				    	//監視用サービス終了
+				    	Intent intent = new Intent(IntruderDetectionActivity.this, WatchService.class);
+				    	stopService(intent);
+					}
+					
+					return true;
+				}
+		    });
 		}
 		else{
-			getFragmentManager().beginTransaction().replace(android.R.id.content,
-					new SettingFragment()).commit();
+			getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingFragment(this)).commit();
 		}
 		
     	mInterstitial = new com.ad_stir.interstitial.AdstirInterstitial("MEDIA-4f4df14b",2);
@@ -91,13 +117,18 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static class SettingFragment extends PreferenceFragment{
+		Context mContext;
+		public SettingFragment(Context context){
+			mContext = context;
+		}
+		
 		@Override
 		public void onCreate(Bundle savedInstanceState){
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preference);
 			
-		    PreferenceScreen nextMove1 = (PreferenceScreen)findPreference("gallery");
-		    nextMove1.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		    PreferenceScreen galleryPref = (PreferenceScreen)findPreference("gallery");
+		    galleryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		        @Override
 		        public boolean onPreferenceClick(Preference preference) {
 		        	if(DEBUG){
@@ -107,6 +138,29 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		            return true;
 		        }
 		    });
+		    
+		    SwitchPreference switchPref = (SwitchPreference)findPreference("switch");
+		    switchPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					if(DEBUG){
+						Log.d(TAG, "value = " + ((SwitchPreference)preference).isChecked());
+					}
+					//OFFにした際にサービスを終了
+					//なぜかOFFでtrueが帰る
+					if(((SwitchPreference)preference).isChecked()){
+						if(DEBUG){
+							Log.d(TAG, "stop service");
+						}						
+				    	//監視用サービス終了
+				    	Intent intent = new Intent(mContext, WatchService.class);
+				    	mContext.stopService(intent);
+					}
+					
+					return true;
+				}
+		    });
+		    
 		}
 		
 	    private void startGallery(){
@@ -237,6 +291,11 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 			}
     	});
     	mInterstitial.showDialog(this);
+    }
+
+    @Override
+    protected void onPause(){
+    	super.onPause();
     }
     
     @Override
