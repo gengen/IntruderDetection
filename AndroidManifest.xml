@@ -43,6 +43,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        
+        <activity 
+            android:name="com.ad_stir.interstitial.AdstirInterstitialActivity"
+	        android:theme="@android:style/Theme.Translucent"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+        </activity>
     </application>
 
 </manifest>

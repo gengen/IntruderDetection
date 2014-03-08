@@ -3,6 +3,10 @@
 
     <string name="app_name">IntruderDetection</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="app_finish_title">Close Application?</string>
+    <string name="app_finish_ok">Close</string>
+    <string name="app_finish_calcel">Cancel</string>
 
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_message">Sorry. It\'s not working on this device. (Front camera is nothing.)</string>

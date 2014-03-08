@@ -1,5 +1,9 @@
 package org.g_oku.intruderdetection;
 
+import java.io.File;
+
+import com.ad_stir.interstitial.AdstirInterstitial.AdstirInterstitialDialogListener;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -23,6 +27,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	public static final String TAG = "IntruderDetection";
 	public static final boolean DEBUG = false;
 	
+    //ad
+    com.ad_stir.interstitial.AdstirInterstitial mInterstitial;
+    
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@SuppressWarnings("deprecation")
 	@Override
@@ -63,6 +70,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 			getFragmentManager().beginTransaction().replace(android.R.id.content,
 					new SettingFragment()).commit();
 		}
+		
+    	mInterstitial = new com.ad_stir.interstitial.AdstirInterstitial("MEDIA-4f4df14b",2);
+    	mInterstitial.load();
 	}
 	
 	private boolean checkFrontCamera(){
@@ -90,7 +100,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		    nextMove1.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		        @Override
 		        public boolean onPreferenceClick(Preference preference) {
-		        	Log.d(TAG, "onPreferenceClick");
+		        	if(DEBUG){
+		        		Log.d(TAG, "onPreferenceClick");
+		        	}
 		        	startGallery();
 		            return true;
 		        }
@@ -200,5 +212,52 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     	        }
     	    }
     	}
+    }
+    
+    @Override
+    public void onBackPressed(){
+    	//インタースティシャル広告表示(OKでアプリ終了)
+    	//mInterstitial.showInterstitial(this);
+    	mInterstitial.setDialogText(getString(R.string.app_finish_title));
+    	mInterstitial.setPositiveButtonText(getString(R.string.app_finish_ok));
+    	mInterstitial.setNegativeButtonText(getString(R.string.app_finish_cancel));
+    	mInterstitial.setDialoglistener(new AdstirInterstitialDialogListener(){
+			@Override
+			public void onCancel() {
+			}
+
+			@Override
+			public void onNegativeButtonClick() {
+				return;
+			}
+
+			@Override
+			public void onPositiveButtonClick() {
+				finish();
+			}
+    	});
+    	mInterstitial.showDialog(this);
+    }
+    
+    @Override
+	public void onDestroy(){
+    	super.onDestroy();
+    	deleteCache(getCacheDir());
+    }
+
+    public static boolean deleteCache(File dir) {
+    	if(dir==null) {
+    		return false;
+    	}
+    	if (dir.isDirectory()) {
+    		String[] children = dir.list();
+    		for (int i = 0; i < children.length; i++) {
+    			boolean success = deleteCache(new File(dir, children[i]));
+    			if (!success) {
+    				return false;
+    			}
+    		}
+    	}
+    	return dir.delete();
     }
 }

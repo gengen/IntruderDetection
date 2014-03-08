@@ -3,6 +3,10 @@
 
     <string name="app_name">侵入者検知くん</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="app_finish_title">アプリを終了しますか？</string>
+    <string name="app_finish_ok">OK</string>
+    <string name="app_finish_cancel">Cancel</string>
 
     <string name="dialog_error_title">エラー</string>
     <string name="dialog_error_message">申し訳ありませんが、フロントカメラが無い機種ではご利用になれません。</string>

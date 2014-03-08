@@ -10,8 +10,13 @@
         switchpref:switchTextOn="@string/pref_switch_on"
         android:defaultValue="false"/>
  
-	<PreferenceScreen android:summary="@string/pref_gallery_summary"
+	<PreferenceScreen 
+	    android:summary="@string/pref_gallery_summary"
     	android:title="@string/pref_gallery_title"
-        android:key="gallery">
-	</PreferenceScreen>
+        android:key="gallery"/>
+	
+	<Preference 
+		android:selectable="true"
+	    android:layout="@layout/ad"/>
+
 </PreferenceScreen>
