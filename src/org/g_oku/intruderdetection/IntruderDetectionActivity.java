@@ -164,6 +164,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		}
 		
 	    private void startGallery(){
+	    	Intent intent = new Intent(getActivity(), MyGalleryActivity.class);
+	    	startActivity(intent);
+	    	/*
 	    	// ギャラリー表示
 	    	Intent intent = null;
 	    	try{
@@ -211,6 +214,7 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	    	        }
 	    	    }
 	    	}
+	    	*/
 	    }
 	}
 	
@@ -219,6 +223,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     }
     
     private void startGalleryPreGB(){
+    	Intent intent = new Intent(this, MyGalleryActivity.class);
+    	startActivity(intent);
+    	/*
     	// ギャラリー表示
     	Intent intent = null;
     	try{
@@ -266,6 +273,7 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     	        }
     	    }
     	}
+    	*/
     }
     
     @Override
