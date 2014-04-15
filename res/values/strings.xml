@@ -24,6 +24,9 @@
     
 <string name="pref_action_delete">Delete</string>
 <string name="pref_action_deleteAll">Delete all</string>
+<string name="pref_action_share">Share</string>
+
+<string name="dialog_progress_delete">Delete</string>
     
 <string name="dialog_confirm_title">Confirm</string>
 <string name="dialog_delete_confirm">Delete?</string>

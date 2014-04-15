@@ -5,21 +5,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Camera.Size;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.Media;
@@ -66,6 +70,8 @@ public class MyGalleryActivity extends FragmentActivity {
 	//100枚以上ならアラートを出す
 	private static final int ARERT_IMAGE_NUM = 100; 
 
+    ProgressDialog mProgressDialog = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +81,31 @@ public class MyGalleryActivity extends FragmentActivity {
         mGridView.setNumColumns(2);
         mGridView.setVerticalSpacing(10);
         
+        initProgressDialog();
+        
         setDisplay();
     }
+    
+    void initProgressDialog(){
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.dialog_progress_delete));
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+    }
+    
+    Runnable runnable = new Runnable() {
+        public void run() {
+        	handler.sendMessage(new Message());
+        }
+    };
+    
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            mProgressDialog.dismiss();
+        };
+    };
     
     private void setDisplay(){
         //複数選択設定
@@ -88,8 +117,14 @@ public class MyGalleryActivity extends FragmentActivity {
 		    	switch (item.getItemId()) {
 		    	case R.id.action_delete:
 		    		delete();
+		    		break;
+
+		    	case R.id.action_share:
+		    		share();
+		    		break;
 		    	}
-				return true;
+
+		    	return true;
 			}
 
 			@Override
@@ -234,26 +269,61 @@ public class MyGalleryActivity extends FragmentActivity {
 		}
     }
     
+    private void share(){
+    	ArrayList<Uri> list = new ArrayList<Uri>();
+    	
+		ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
+    	//選択されているインデックス取得
+    	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+    	for(int i=0; i<positions.size(); i++){
+        	int key = positions.keyAt(i);
+        	
+        	ImageItem item = adapter.getItem(key);
+        	String url = "file://" + item.path;
+        	list.add(Uri.parse(url));
+    	}
+    	
+		Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+		intent.setType("image/jpg");
+		intent.putExtra(Intent.EXTRA_STREAM, list);
+		startActivity(intent);
+    }
+    
     private void delete(){
     	new AlertDialog.Builder(this)
     	.setTitle(R.string.dialog_confirm_title)
     	.setMessage(getString(R.string.dialog_delete_confirm))
     	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-		    	ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
-
-		    	//選択されているインデックス取得
-		    	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-		    	for(int i=0; i<positions.size(); i++){
-		        	int key = positions.keyAt(i);
-		        	
-		        	ImageItem item = adapter.getItem(key);
-		        	//Log.d(TAG, "path = " + item.path);
-		        	
-		        	deleteImageFile(item.path);
-		    	}
+		    	//プログレスダイアログ表示
+		    	mProgressDialog.show();
 		    	
-				setDisplay();
+				AsyncTask task = new AsyncTask() {
+					@Override
+					protected Object doInBackground(Object... params) {
+				    	ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
+
+				    	//選択されているインデックス取得
+				    	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+				    	for(int i=0; i<positions.size(); i++){
+				        	int key = positions.keyAt(i);
+				        	
+				        	ImageItem item = adapter.getItem(key);
+				        	//Log.d(TAG, "path = " + item.path);
+				        	
+				        	deleteImageFile(item.path);
+				    	}
+
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Object obj) {
+						setDisplay();
+						mProgressDialog.dismiss();
+					}
+				};
+				task.execute();
 			}
 		})
 		.setNegativeButton(R.string.ng, new DialogInterface.OnClickListener() {
@@ -265,9 +335,6 @@ public class MyGalleryActivity extends FragmentActivity {
     }
     
     private void deleteImageFile(String path){
-    	//File file = new File(item.path);
-    	//file.delete();
-
     	//ギャラリーからの削除
     	getContentResolver().delete(Media.EXTERNAL_CONTENT_URI, Images.Media.DATA + " = ?", new String[]{path});
 
@@ -401,17 +468,32 @@ public class MyGalleryActivity extends FragmentActivity {
     	.setMessage(getString(R.string.dialog_delete_all_confirm))
     	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-		        List<File> files = null;
-				try {
-					files = FileDataUtil.getApplicationBitmapFileList(getApplicationContext());
-				} catch (IOException e) {
-				}
+				//プログレスダイアログ表示
+		    	mProgressDialog.show();
 
-				for (int i = 0; i < files.size(); i++) {
-		            deleteImageFile(files.get(i).getPath());
-		        }
-		        
-				setDisplay();
+				AsyncTask task = new AsyncTask() {
+					@Override
+					protected Object doInBackground(Object... params) {
+				    	List<File> files = null;
+						try {
+							files = FileDataUtil.getApplicationBitmapFileList(getApplicationContext());
+						} catch (IOException e) {
+						}
+
+						for (int i = 0; i < files.size(); i++) {
+				            deleteImageFile(files.get(i).getPath());
+				        }
+
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Object obj) {
+						setDisplay();
+						mProgressDialog.dismiss();
+					}
+				};
+				task.execute();
 			}
 		})
 		.setNegativeButton(R.string.ng, new DialogInterface.OnClickListener() {
