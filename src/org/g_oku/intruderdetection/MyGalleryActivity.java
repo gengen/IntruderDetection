@@ -175,6 +175,9 @@ public class MyGalleryActivity extends FragmentActivity {
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             //選択でImageViewに拡大表示
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+    			ImageView view = (ImageView)findViewById(R.id.image);
+                view.setImageBitmap(null);
+
                 ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
                 ImageItem item = adapter.getItem(position);
                 
@@ -192,7 +195,6 @@ public class MyGalleryActivity extends FragmentActivity {
                 bufInput = new BufferedInputStream(fileInput);
     			Bitmap bmp = BitmapFactory.decodeStream(bufInput);
 
-    			ImageView view = (ImageView)findViewById(R.id.image);
                 view.setImageBitmap(bmp);
             }
         });
