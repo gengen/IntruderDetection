@@ -18,4 +18,17 @@
 
     <string name="pref_gallery_title">侵入者を確認</string>
     <string name="pref_gallery_summary">ギャラリーを起動して撮影画像を見る</string>
+    
+    <string name="toast_read_error_message">画像を読み込めませんでした</string>
+    <string name="toast_delete_error_message">削除できませんでした</string>
+    
+    <string name="pref_action_delete">削除</string>
+    <string name="pref_action_deleteAll">全削除</string>
+    
+    <string name="dialog_confirm_title">確認</string>
+	<string name="dialog_delete_confirm">選択した画像を削除しますか？</string>
+	<string name="dialog_delete_all_confirm">全削除しますか？</string>
+	<string name="ok">OK</string>         
+	<string name="ng">キャンセル</string>
+
 </resources>

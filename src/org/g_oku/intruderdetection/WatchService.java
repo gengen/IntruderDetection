@@ -41,8 +41,6 @@ public class WatchService extends Service {
 	public void onStart(Intent intent, int startId) {
 		mID = startId;
 		setLayer();
-		//TODO Notificationへの表示は要検討
-		//displayNotificationArea();
         mResolver = getApplicationContext().getContentResolver();
 
 		mSurface = (SurfaceView)mOverLayView.findViewById(R.id.camera);
@@ -93,8 +91,10 @@ public class WatchService extends Service {
 	}
 	
 	public void stop(){
-		mWindowMgr.removeView(mOverLayView);
-		mWindowMgr = null;
+		if(mWindowMgr != null){
+			mWindowMgr.removeView(mOverLayView);
+			mWindowMgr = null;
+		}
 		mOverLayView = null;
 		stopSelf(mID);
 	}
@@ -106,11 +106,5 @@ public class WatchService extends Service {
 		if(mWindowMgr != null && mOverLayView != null){
 			mWindowMgr.removeView(mOverLayView);
 		}
-
-		/*
-		//Notificationを非表示
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.cancel(R.string.app_name);
-        */
 	}
 }

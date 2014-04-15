@@ -18,4 +18,17 @@
     
     <string name="pref_gallery_title">Check intruder</string>
     <string name="pref_gallery_summary">Launch gallery and check photo</string>
+    
+    <string name="toast_read_error_message">Can\'t read image files</string>
+    <string name="toast_delete_error_message">Can\'t delete image files</string>
+    
+    <string name="pref_action_delete">Delete</string>
+    <string name="pref_action_deleteAll">Delete all</string>
+    
+	<string name="dialog_confirm_title">Confirm</string>
+	<string name="dialog_delete_confirm">Delete?</string>
+	<string name="dialog_delete_all_confirm">Delete all?</string>
+	<string name="ok">Yes</string>         
+	<string name="ng">Cancel</string>
+	
 </resources>

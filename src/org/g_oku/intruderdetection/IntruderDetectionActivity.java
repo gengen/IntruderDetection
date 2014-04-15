@@ -6,13 +6,13 @@ import org.jraf.android.backport.switchwidget.SwitchPreference;
 
 import com.ad_stir.interstitial.AdstirInterstitial.AdstirInterstitialDialogListener;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.net.Uri;
@@ -26,7 +26,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.view.KeyEvent;
 
 public class IntruderDetectionActivity extends PreferenceActivity {
 	public static final String TAG = "IntruderDetection";
@@ -94,7 +93,7 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		    });
 		}
 		else{
-			getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingFragment(this)).commit();
+			getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingFragment()).commit();
 		}
 		
     	mInterstitial = new com.ad_stir.interstitial.AdstirInterstitial("MEDIA-4f4df14b",2);
@@ -117,9 +116,10 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static class SettingFragment extends PreferenceFragment{
-		Context mContext;
-		public SettingFragment(Context context){
-			mContext = context;
+		//Context mContext;
+		
+		public SettingFragment(){
+			//mContext = context;
 		}
 		
 		@Override
@@ -153,8 +153,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 							Log.d(TAG, "stop service");
 						}						
 				    	//監視用サービス終了
-				    	Intent intent = new Intent(mContext, WatchService.class);
-				    	mContext.stopService(intent);
+				    	Intent intent = new Intent(getActivity(), WatchService.class);
+				    	getActivity().stopService(intent);
 					}
 					
 					return true;
@@ -164,57 +164,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 		}
 		
 	    private void startGallery(){
+	    	//自前のGalleryを呼ぶ
 	    	Intent intent = new Intent(getActivity(), MyGalleryActivity.class);
 	    	startActivity(intent);
-	    	/*
-	    	// ギャラリー表示
-	    	Intent intent = null;
-	    	try{
-	    	    // for Honeycomb
-	    	    intent = new Intent();
-	    	    intent.setClassName("com.android.gallery3d", "com.android.gallery3d.app.Gallery");
-	    	    startActivity(intent);
-	    	    return;
-	    	}
-	    	catch(Exception e){
-	    	    try{
-	    	        // for Recent device
-	    	        intent = new Intent();
-	    	        intent.setClassName("com.cooliris.media", "com.cooliris.media.Gallery");
-	    	        startActivity(intent);
-	    	    }
-	    	    catch(ActivityNotFoundException e1){
-	    	        try
-	    	        {
-	    	            // for Other device except HTC
-	    	            intent = new Intent(Intent.ACTION_VIEW);
-	    	            intent.setData(Uri.parse("content://media/external/images/media"));
-	    	            startActivity(intent);
-	    	        }
-	    	        catch (ActivityNotFoundException e2){
-	    	        	try{
-	    	        		// for HTC
-	    	        		intent = new Intent();
-	    	        		intent.setClassName("com.htc.album", "com.htc.album.AlbumTabSwitchActivity");
-	    	        		startActivity(intent);
-	    	        	}
-	    	        	catch(ActivityNotFoundException e3){
-	        	        	try{
-	        	        		// for HTC
-	        	        		intent = new Intent();
-	        	        		intent.setClassName("com.htc.album", "com.htc.album.AlbumMain.ActivityMainDropList");
-	        	        		startActivity(intent);
-	        	        	}
-	        	        	catch(ActivityNotFoundException e4){
-	        	    	    	intent = new Intent(Intent.ACTION_PICK);
-	        	    	    	intent.setType("image/*");
-	        	    	    	startActivity(intent);
-	        	        	}
-	    	        	}
-	    	        }
-	    	    }
-	    	}
-	    	*/
 	    }
 	}
 	
@@ -222,10 +174,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     	return PreferenceManager.getDefaultSharedPreferences(c).getBoolean("switch", false);
     }
     
+    //GB以前は自前のGalleryではなく標準のGalleryを呼ぶ
     private void startGalleryPreGB(){
-    	Intent intent = new Intent(this, MyGalleryActivity.class);
-    	startActivity(intent);
-    	/*
     	// ギャラリー表示
     	Intent intent = null;
     	try{
@@ -273,7 +223,6 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     	        }
     	    }
     	}
-    	*/
     }
     
     @Override

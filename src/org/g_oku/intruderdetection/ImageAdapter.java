@@ -9,6 +9,7 @@ import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 /**
  * {@link GridView} の {@link ArrayAdapter}.
@@ -37,6 +38,7 @@ public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
         ImageView view = new ImageView(getContext());
         view.setLayoutParams(new AbsListView.LayoutParams(100, 100));
+        view.setScaleType(ScaleType.FIT_CENTER);
         view.setImageBitmap(item.bitmap);
         view.setTag(item);
         

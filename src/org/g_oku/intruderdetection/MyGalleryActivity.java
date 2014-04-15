@@ -5,12 +5,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera.Size;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Images.Media;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -28,10 +37,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * GridView を表示する {@link Activity}.
  */
+
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MyGalleryActivity extends FragmentActivity {
 
     /** ログ出力用のタグ. */
@@ -41,6 +53,8 @@ public class MyGalleryActivity extends FragmentActivity {
     private LruCache<String, Bitmap> mLruCache;
     /** {@link GridView}. */
     private GridView mGridView;
+    
+    String mCurImgPath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +74,9 @@ public class MyGalleryActivity extends FragmentActivity {
         mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener(){
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				Log.d(TAG, "onActionItemClicked");
+				//Log.d(TAG, "onActionItemClicked");
 		    	switch (item.getItemId()) {
 		    	case R.id.action_delete:
-		    		Log.d(TAG, "delete");
 		    		delete();
 		    	}
 				return true;
@@ -71,27 +84,27 @@ public class MyGalleryActivity extends FragmentActivity {
 
 			@Override
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				Log.d(TAG, "onCreateActionMode");
+				//Log.d(TAG, "onCreateActionMode");
 		        getMenuInflater().inflate(R.menu.gallery_action, menu);
 				return true;
 			}
 
 			@Override
 			public void onDestroyActionMode(ActionMode arg0) {
-				Log.d(TAG, "onDestroyActionMode");
+				//Log.d(TAG, "onDestroyActionMode");
 			}
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode arg0, Menu arg1) {
-				Log.d(TAG, "onPrepareActionMode");
+				//Log.d(TAG, "onPrepareActionMode");
 				return true;
 			}
 
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
-				Log.d(TAG, "onItemCheckedStateChanged");
-				int count = mGridView.getCheckedItemCount();
-				Log.d(TAG, "check count = " + count);
+				//Log.d(TAG, "onItemCheckedStateChanged");
+				//int count = mGridView.getCheckedItemCount();
+				//Log.d(TAG, "check count = " + count);
 			}
         });
 
@@ -108,11 +121,16 @@ public class MyGalleryActivity extends FragmentActivity {
         };
 
         // Adapter の作成とアイテムの追加
-		List<File> imageFileList = null;
+        List<File> imageFileList = null;
 		try {
 			imageFileList = FileDataUtil.getApplicationBitmapFileList(this);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Toast.makeText(this, R.string.toast_read_error_message, Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		if(imageFileList == null){
+			return;
 		}
 
 		ImageAdapter adapter = new ImageAdapter(this);
@@ -125,6 +143,8 @@ public class MyGalleryActivity extends FragmentActivity {
             
             adapter.add(item);
         }
+        //最新順にソート
+        adapter.sort(new AdapterComparator());
 		
         mGridView.setOnScrollListener(new OnScrollListener() {
             @Override
@@ -145,6 +165,8 @@ public class MyGalleryActivity extends FragmentActivity {
                 ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
                 ImageItem item = adapter.getItem(position);
                 
+                //選択されている画像のパスを覚えておく(delete時のクリア用)
+                mCurImgPath = item.path;
                 //Log.d(TAG, "path = " + item.path);
                 
         		FileInputStream fileInput = null;
@@ -170,21 +192,31 @@ public class MyGalleryActivity extends FragmentActivity {
 
     	//選択されているインデックス取得
     	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-    	Log.d(TAG, "size = " + positions.size());
     	for(int i=0; i<positions.size(); i++){
         	int key = positions.keyAt(i);
-        	Log.d(TAG, "key = " + key);
         	
         	ImageItem item = adapter.getItem(key);
-        	Log.d(TAG, "path = " + item.path);
+        	//Log.d(TAG, "path = " + item.path);
         	
-        	File file = new File(item.path);
-        	file.delete();
+        	deleteImageFile(item.path);
     	}
     	
-    	//TODO ギャラリーからの削除
-    	
-    	setDisplay();
+		setDisplay();
+    }
+    
+    private void deleteImageFile(String path){
+    	//File file = new File(item.path);
+    	//file.delete();
+
+    	//ギャラリーからの削除
+    	getContentResolver().delete(Media.EXTERNAL_CONTENT_URI, Images.Media.DATA + " = ?", new String[]{path});
+
+    	//削除対象の画像を表示中ならクリア
+    	if(mCurImgPath.equals(path)){
+    		ImageView view = (ImageView)findViewById(R.id.image);
+    		view.setImageBitmap(null);
+    		mCurImgPath = "";
+    	}
     }
     
     /**
@@ -291,7 +323,48 @@ public class MyGalleryActivity extends FragmentActivity {
     }
     
     private void deleteAll(){
-    	Log.d(TAG, "deleteALL");
-    }
+    	//ここはただ数を取りたいだけ
+        List<File> fileList = null;
+		try {
+			fileList = FileDataUtil.getApplicationBitmapFileList(this);
+		} catch (IOException e) {
+			Toast.makeText(this, R.string.toast_delete_error_message, Toast.LENGTH_LONG).show();
+			return;
+		}
+		//ファイルが0の場合は何もしない
+		if(fileList.size() == 0){
+			return;
+		}
+    	
+    	new AlertDialog.Builder(this)
+    	.setTitle(R.string.dialog_confirm_title)
+    	.setMessage(getString(R.string.dialog_delete_all_confirm))
+    	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		        List<File> files = null;
+				try {
+					files = FileDataUtil.getApplicationBitmapFileList(getApplicationContext());
+				} catch (IOException e) {
+				}
 
+				for (int i = 0; i < files.size(); i++) {
+		            deleteImageFile(files.get(i).getPath());
+		        }
+		        
+				setDisplay();
+			}
+		})
+		.setNegativeButton(R.string.ng, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				//何もしない
+			}
+		})
+		.show();
+    }
+    
+    class AdapterComparator implements java.util.Comparator {
+    	public int compare(Object s, Object t) {
+    		return ((ImageItem)t).id - ((ImageItem)s).id;
+    	}
+    }
 }

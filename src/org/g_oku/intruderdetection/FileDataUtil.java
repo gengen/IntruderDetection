@@ -84,10 +84,11 @@ public class FileDataUtil {
 		List<File> result = new ArrayList<File>();;
 
 		File sdcardRoot = getSdCardRootDirectory();
-		File loadDir = new File(sdcardRoot, /*context.getPackageName()*/"ContShooting");
+		File loadDir = new File(sdcardRoot, "Intruder");
 		//Log.d("GallerySample", loadDir.getPath());
 		if (!loadDir.exists()) {
-			throw new IOException(String.format("アプリケーションの保存先が存在しません(%s)", loadDir));
+			loadDir.mkdir();
+			//throw new IOException(String.format("アプリケーションの保存先が存在しません(%s)", loadDir));
 		}
 		if (!loadDir.canRead()) {
 			throw new IOException(String.format("ファイルを読み出しできません(%s)", loadDir));

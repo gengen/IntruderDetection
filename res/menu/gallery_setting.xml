@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/action_deleteAll"
-        android:title="deleteAll"/>
+        android:title="@string/pref_action_deleteAll"/>
 </menu>
