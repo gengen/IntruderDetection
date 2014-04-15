@@ -13,11 +13,14 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.Media;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +30,7 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +39,8 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -55,6 +61,10 @@ public class MyGalleryActivity extends FragmentActivity {
     private GridView mGridView;
     
     String mCurImgPath = "";
+    
+	boolean mDisplayFlag = false;
+	//100枚以上ならアラートを出す
+	private static final int ARERT_IMAGE_NUM = 100; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +142,9 @@ public class MyGalleryActivity extends FragmentActivity {
 		if(imageFileList == null){
 			return;
 		}
+		
+		//枚数が多い場合は削除するようアラートを入れる
+		alertNotifyDialog(imageFileList.size());
 
 		ImageAdapter adapter = new ImageAdapter(this);
         mGridView.setAdapter(adapter);
@@ -185,23 +198,68 @@ public class MyGalleryActivity extends FragmentActivity {
         });
 
         loadBitmap();
-    }	
+    }
+    
+    private void alertNotifyDialog(int size){
+		SharedPreferences sharePref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		boolean flag = sharePref.getBoolean("displayFlag", true);
+		if(size > ARERT_IMAGE_NUM && flag){
+			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+			View view = inflater.inflate(R.layout.notify_dialog, null);
+			
+			AlertDialog dialog = new AlertDialog.Builder(this)
+			.setTitle(R.string.dialog_notify_title)
+			.setMessage(getString(R.string.dialog_notify_message))
+			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					//Checkboxの状態を保存
+					SharedPreferences sharePref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					Editor editor = sharePref.edit();
+					editor.putBoolean("displayFlag", !mDisplayFlag);
+					editor.commit();
+				}
+			}).create();
+			dialog.setView(view, 0, 0, 0, 0);
+			dialog.show();
+
+			CheckBox checkbox = (CheckBox)view.findViewById(R.id.checkBox1);
+			checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
+					mDisplayFlag = isChecked;
+				}
+			});
+		}
+    }
     
     private void delete(){
-    	ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
+    	new AlertDialog.Builder(this)
+    	.setTitle(R.string.dialog_confirm_title)
+    	.setMessage(getString(R.string.dialog_delete_confirm))
+    	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		    	ImageAdapter adapter = (ImageAdapter)mGridView.getAdapter();
 
-    	//選択されているインデックス取得
-    	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-    	for(int i=0; i<positions.size(); i++){
-        	int key = positions.keyAt(i);
-        	
-        	ImageItem item = adapter.getItem(key);
-        	//Log.d(TAG, "path = " + item.path);
-        	
-        	deleteImageFile(item.path);
-    	}
-    	
-		setDisplay();
+		    	//選択されているインデックス取得
+		    	SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+		    	for(int i=0; i<positions.size(); i++){
+		        	int key = positions.keyAt(i);
+		        	
+		        	ImageItem item = adapter.getItem(key);
+		        	//Log.d(TAG, "path = " + item.path);
+		        	
+		        	deleteImageFile(item.path);
+		    	}
+		    	
+				setDisplay();
+			}
+		})
+		.setNegativeButton(R.string.ng, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				//何もしない
+			}
+		})
+		.show();    	
     }
     
     private void deleteImageFile(String path){
