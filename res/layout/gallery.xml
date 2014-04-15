@@ -25,6 +25,7 @@
     	    android:layout_height="wrap_content"
         	android:layout_weight="7"
         	android:scaleType="fitCenter"
+        	android:layout_gravity="center"
         	android:paddingRight="10sp"/>
 	</LinearLayout>
     
