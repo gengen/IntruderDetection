@@ -79,7 +79,7 @@ public class MyGalleryActivity extends FragmentActivity {
         setContentView(R.layout.gallery);
         mGridView = (GridView)findViewById(R.id.gridview);
         mGridView.setNumColumns(2);
-        mGridView.setVerticalSpacing(10);
+        mGridView.setVerticalSpacing(20);
         
         initProgressDialog();
         

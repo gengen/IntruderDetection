@@ -38,7 +38,7 @@ public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
         ImageView view = new ImageView(getContext());
         view.setLayoutParams(new AbsListView.LayoutParams(100, 100));
-        view.setScaleType(ScaleType.FIT_CENTER);
+        view.setScaleType(ScaleType.CENTER);
         view.setImageBitmap(item.bitmap);
         view.setTag(item);
         
