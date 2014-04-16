@@ -38,7 +38,7 @@ public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
         ImageView view = new ImageView(getContext());
         view.setLayoutParams(new AbsListView.LayoutParams(100, 100));
-        view.setScaleType(ScaleType.CENTER);
+        view.setScaleType(ScaleType.FIT_CENTER);
         view.setImageBitmap(item.bitmap);
         view.setTag(item);
         
@@ -58,7 +58,7 @@ public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
         public void setChecked(boolean checked) {
             mChecked = checked;
-            setBackgroundDrawable(checked ? getResources().getDrawable(R.drawable.blue) : null);
+            setBackgroundDrawable(checked ? getResources().getDrawable(R.drawable.cyan) : null);
         }
 
         public boolean isChecked() {

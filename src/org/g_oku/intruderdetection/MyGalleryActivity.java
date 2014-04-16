@@ -65,6 +65,7 @@ public class MyGalleryActivity extends FragmentActivity {
     private GridView mGridView;
     
     String mCurImgPath = "";
+    boolean mDeleteFlag = false;
     
 	boolean mDisplayFlag = false;
 	//100枚以上ならアラートを出す
@@ -320,6 +321,14 @@ public class MyGalleryActivity extends FragmentActivity {
 					@Override
 					protected void onPostExecute(Object obj) {
 						setDisplay();
+						
+						if(mDeleteFlag){
+				    		ImageView view = (ImageView)findViewById(R.id.image);
+				    		view.setImageBitmap(null);
+				    		mCurImgPath = "";
+				    		mDeleteFlag = false;
+						}
+						
 						mProgressDialog.dismiss();
 					}
 				};
@@ -340,9 +349,7 @@ public class MyGalleryActivity extends FragmentActivity {
 
     	//削除対象の画像を表示中ならクリア
     	if(mCurImgPath.equals(path)){
-    		ImageView view = (ImageView)findViewById(R.id.image);
-    		view.setImageBitmap(null);
-    		mCurImgPath = "";
+    		mDeleteFlag = true;
     	}
     }
     
@@ -490,6 +497,14 @@ public class MyGalleryActivity extends FragmentActivity {
 					@Override
 					protected void onPostExecute(Object obj) {
 						setDisplay();
+						
+						if(mDeleteFlag){
+				    		ImageView view = (ImageView)findViewById(R.id.image);
+				    		view.setImageBitmap(null);
+				    		mCurImgPath = "";
+				    		mDeleteFlag = false;
+						}
+						
 						mProgressDialog.dismiss();
 					}
 				};
