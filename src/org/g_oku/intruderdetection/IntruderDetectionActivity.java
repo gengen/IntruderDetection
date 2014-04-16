@@ -2,9 +2,10 @@ package org.g_oku.intruderdetection;
 
 import java.io.File;
 
-import org.jraf.android.backport.switchwidget.SwitchPreference;
+import jp.beyond.sdk.Bead;
+import jp.beyond.sdk.Bead.ContentsOrientation;
 
-import com.ad_stir.interstitial.AdstirInterstitial.AdstirInterstitialDialogListener;
+import org.jraf.android.backport.switchwidget.SwitchPreference;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -31,8 +32,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 	public static final String TAG = "IntruderDetection";
 	public static final boolean DEBUG = false;
 	
-    //ad
-    com.ad_stir.interstitial.AdstirInterstitial mInterstitial;
+    //BEAD ad
+    private Bead mBeadExit = null;
     
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@SuppressWarnings("deprecation")
@@ -96,8 +97,9 @@ public class IntruderDetectionActivity extends PreferenceActivity {
 			getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingFragment()).commit();
 		}
 		
-    	mInterstitial = new com.ad_stir.interstitial.AdstirInterstitial("MEDIA-4f4df14b",2);
-    	mInterstitial.load();
+        //BEAD ad
+        mBeadExit = Bead. createExitInstance("df90e2a0ddfc86515ca26e04e660a066b57d3444454d80e1", ContentsOrientation.Auto);
+        mBeadExit.requestAd(this);		
 	}
 	
 	private boolean checkFrontCamera(){
@@ -227,27 +229,8 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     
     @Override
     public void onBackPressed(){
-    	//インタースティシャル広告表示(OKでアプリ終了)
-    	//mInterstitial.showInterstitial(this);
-    	mInterstitial.setDialogText(getString(R.string.app_finish_title));
-    	mInterstitial.setPositiveButtonText(getString(R.string.app_finish_ok));
-    	mInterstitial.setNegativeButtonText(getString(R.string.app_finish_cancel));
-    	mInterstitial.setDialoglistener(new AdstirInterstitialDialogListener(){
-			@Override
-			public void onCancel() {
-			}
-
-			@Override
-			public void onNegativeButtonClick() {
-				return;
-			}
-
-			@Override
-			public void onPositiveButtonClick() {
-				finish();
-			}
-    	});
-    	mInterstitial.showDialog(this);
+    	// 広告ダイアログ表示
+    	mBeadExit.showAd(this);
     }
 
     @Override
@@ -258,6 +241,12 @@ public class IntruderDetectionActivity extends PreferenceActivity {
     @Override
 	public void onDestroy(){
     	super.onDestroy();
+    	
+    	// 広告終了
+    	if(mBeadExit != null){
+    		mBeadExit.endAd();
+    	}
+    	
     	deleteCache(getCacheDir());
     }
 

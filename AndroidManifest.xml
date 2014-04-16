@@ -49,12 +49,6 @@
 	        android:parentActivityName="org.g_oku.intruderdetection.IntruderDetectionActivity"
 	        android:configChanges="orientation|screenSize">
         </activity>
-        
-        <activity 
-            android:name="com.ad_stir.interstitial.AdstirInterstitialActivity"
-	        android:theme="@android:style/Theme.Translucent"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
-        </activity>
     </application>
 
 </manifest>
