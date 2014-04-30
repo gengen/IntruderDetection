@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -47,6 +48,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -232,10 +234,35 @@ public class MyGalleryActivity extends FragmentActivity {
     			Bitmap bmp = BitmapFactory.decodeStream(bufInput);
 
                 view.setImageBitmap(bmp);
+                
+                if(Locale.JAPAN.equals(Locale.getDefault())) {
+                	String date = getDateString(item.path);
+                	//Log.d(TAG, "date = " + date);
+                	TextView text = (TextView)findViewById(R.id.date);
+                	if(date != null){
+                		text.setText(date);
+                	}
+                	else{
+                		text.setText("");
+                	}
+                }
             }
         });
 
         loadBitmap();
+    }
+    
+    private String getDateString(String path){
+    	int length = path.length();
+    	if(length < 21){
+    		return null;
+    	}
+    	
+    	String yyyy = path.substring(length-21, length-17) + "/";
+    	String mmdd = path.substring(length-17, length-15) + "/" + path.substring(length-15, length-13) + " "; 
+    	String hhmm = path.substring(length-13, length-11) + ":" + path.substring(length-11, length-9);
+    	
+    	return yyyy + mmdd + hhmm;
     }
     
     private void alertNotifyDialog(int size){
