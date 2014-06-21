@@ -46,12 +46,14 @@
           android:layout_gravity="bottom" 
           android:background="#00000000">
     
-        <com.ad_stir.webview.AdstirWebView  
-	  		media="MEDIA-4f4df14b"
-  			spot="1"
-  			refresh_interval="20"
-	  		android:layout_width="fill_parent"
-  			android:layout_height="wrap_content"/>
+		<com.ad_stir.webview.AdstirMraidView 
+			media="MEDIA-4f4df14b"
+			spot="1"
+  			adsize="320,50"
+			refresh_interval="20"
+		    android:layout_gravity="center"
+  			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
     </FrameLayout>
 
 </LinearLayout>

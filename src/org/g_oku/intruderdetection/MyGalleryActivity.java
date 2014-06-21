@@ -350,8 +350,13 @@ public class MyGalleryActivity extends FragmentActivity {
 						setDisplay();
 						
 						if(mDeleteFlag){
+							//画像を非表示にする
 				    		ImageView view = (ImageView)findViewById(R.id.image);
 				    		view.setImageBitmap(null);
+				    		//日付を非表示にする
+		                	TextView text = (TextView)findViewById(R.id.date);
+		                	text.setText("");
+				    		
 				    		mCurImgPath = "";
 				    		mDeleteFlag = false;
 						}
@@ -526,8 +531,12 @@ public class MyGalleryActivity extends FragmentActivity {
 						setDisplay();
 						
 						if(mDeleteFlag){
+							//画像を非表示にする
 				    		ImageView view = (ImageView)findViewById(R.id.image);
 				    		view.setImageBitmap(null);
+				    		//日付を非表示にする
+		                	TextView text = (TextView)findViewById(R.id.date);
+		                	text.setText("");
 				    		mCurImgPath = "";
 				    		mDeleteFlag = false;
 						}

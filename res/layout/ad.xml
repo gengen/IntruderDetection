@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	<com.ad_stir.webview.AdstirWebView  
+	<com.ad_stir.webview.AdstirMraidView 
 		media="MEDIA-4f4df14b"
-  		spot="1"
-  		refresh_interval="20"
-		android:layout_width="match_parent"
-  		android:layout_height="match_parent"/>
+		spot="1"
+  		adsize="320,50"
+		refresh_interval="20"
+	    android:layout_gravity="center"
+  		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
 </FrameLayout>
