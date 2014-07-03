@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">Compruebe el intruso</string>
 <string name="pref_gallery_summary">Ver la imagen capturada para llegar a la galería</string>
 
-<string name="pref_save_gallery_title">Ocultar imágenes</string>
-<string name="pref_save_gallery_summary">Ocultar imágenes de la galería por defecto. Por favor, consulte las imágenes a través de esta aplicación.</string>
+<string name="pref_save_gallery_title">Guardar en una carpeta dedicada</string>
+<string name="pref_save_gallery_summary">La imagen capturada se almacena en una carpeta específica. No es visible desde la galería de la norma.</string>
 
 <string name="toast_read_error_message">Windows no puede cargar la imagen</string>
 <string name="toast_delete_error_message">No se puede borrar</string>

@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">Confira o intruso</string>
 <string name="pref_gallery_summary">Ver a imagem capturada para abrir a galeria</string>
 
-<string name="pref_save_gallery_title">Ocultar imagens</string>
-<string name="pref_save_gallery_summary">Ocultar imagens da galeria padrão. Por favor, consulte as imagens através deste aplicativo.</string>
+<string name="pref_save_gallery_title">Salve em uma pasta dedicada</string>
+<string name="pref_save_gallery_summary">A imagem capturada é armazenada em uma pasta dedicada. Não é visível a partir da galeria da norma.</string>
 
 <string name="toast_read_error_message">O Windows não pode carregar a imagem</string>
 <string name="toast_delete_error_message">Não foi possível excluir</string>

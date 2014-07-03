@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">침입자 확인</string>
 <string name="pref_gallery_summary">갤러리를 시작하여 촬영 한 사진보기</string>
 
-<string name="pref_save_gallery_title">이미지 숨기기</string>
-<string name="pref_save_gallery_summary">기본 갤러리에서 이미지를 숨 깁니다. 이 응용 프로그램을 통해 이미지를 참조하시기 바랍니다.</string>
+<string name="pref_save_gallery_title">전용 폴더에 저장</string>
+<string name="pref_save_gallery_summary">촬영 한 사진은 전용 폴더에 저장됩니다. 표준 갤러리에서 보이지 않습니다.</string>
 
 <string name="toast_read_error_message">이미지를로드 할 수 없습니다</string>
 <string name="toast_delete_error_message">제거 할 수 없습니다</string>

@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">Überprüfen Sie den Eindringling</string>
 <string name="pref_gallery_summary">Sehen Sie das aufgenommene Bild, um die Galerie zu starten</string>
 
-<string name="pref_save_gallery_title">Bilder ausblenden</string>
-<string name="pref_save_gallery_summary">Bilder von Standard-Galerie ausblenden. Bitte beziehen Sie sich Bilder über diese App.</string>
+<string name="pref_save_gallery_title">In einem speziellen Ordner</string>
+<string name="pref_save_gallery_summary">Das aufgenommene Bild wird in einem speziellen Ordner abgelegt. Ist das nicht aus der Galerie der Norm sichtbar.</string>
 
 <string name="toast_read_error_message">Windows kann das Bild nicht geladen</string>
 <string name="toast_delete_error_message">Konnte nicht gelöscht werden</string>

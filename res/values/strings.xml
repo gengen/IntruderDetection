@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">Check intruder</string>
 <string name="pref_gallery_summary">Launch gallery and check photo</string>
 
-<string name="pref_save_gallery_title">Hide images</string>
-<string name="pref_save_gallery_summary">Hide images from default gallery. Please refer images via this app.</string>
+<string name="pref_save_gallery_title">Save to a dedicated folder</string>
+<string name="pref_save_gallery_summary">The captured image is stored in a dedicated folder. Is not visible from the default gallery.</string>
 
 <string name="toast_read_error_message">Can\'t read image files</string>
 <string name="toast_delete_error_message">Can\'t delete image files</string>

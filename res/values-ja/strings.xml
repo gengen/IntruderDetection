@@ -19,8 +19,8 @@
 <string name="pref_gallery_title">侵入者を確認</string>
 <string name="pref_gallery_summary">ギャラリーを起動して撮影画像を見る</string>
 
-<string name="pref_save_gallery_title">撮影画像を隠す</string>
-<string name="pref_save_gallery_summary">標準のギャラリーには保存しません。撮影画像は本アプリから見てください。</string>
+<string name="pref_save_gallery_title">専用フォルダに保存</string>
+<string name="pref_save_gallery_summary">撮影画像は専用フォルダに保存されます。標準のギャラリーからは見えません。</string>
 
 <string name="toast_read_error_message">画像を読み込めませんでした</string>
 <string name="toast_delete_error_message">削除できませんでした</string>
