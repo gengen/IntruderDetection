@@ -150,22 +150,24 @@ public class ImageAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
             return;
         }
 
-        //ギャラリーへの登録
-        ContentValues values = new ContentValues();        
+        if(!IntruderDetectionPreference.isNotSave(mContext)){
+        	//ギャラリーへの登録
+        	ContentValues values = new ContentValues();        
 
-        values.put(Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(Images.Media.DATA, savefile.getAbsolutePath());
-        values.put(Images.Media.SIZE, savefile.length());
-        //values.put(Images.Media.TITLE,strFile);
-        //values.put(Images.Media.DISPLAY_NAME,strFile);
-        values.put(Images.Media.DATE_ADDED, date);
-        values.put(Images.Media.DATE_TAKEN, date);
-        //values.put(Images.Media.DATE_MODIFIED, date);
-        //values.put(Images.Media.DESCRIPTION,"");
-        //values.put(Images.Media.LATITUDE,0.0);
-        //values.put(Images.Media.LONGITUDE,0.0);
-        //values.put(Images.Media.ORIENTATION,"");
-        ((WatchService)mContext).saveGallery(values);
+        	values.put(Images.Media.MIME_TYPE, "image/jpeg");
+        	values.put(Images.Media.DATA, savefile.getAbsolutePath());
+        	values.put(Images.Media.SIZE, savefile.length());
+        	//values.put(Images.Media.TITLE,strFile);
+        	//values.put(Images.Media.DISPLAY_NAME,strFile);
+        	values.put(Images.Media.DATE_ADDED, date);
+        	values.put(Images.Media.DATE_TAKEN, date);
+        	//values.put(Images.Media.DATE_MODIFIED, date);
+        	//values.put(Images.Media.DESCRIPTION,"");
+        	//values.put(Images.Media.LATITUDE,0.0);
+        	//values.put(Images.Media.LONGITUDE,0.0);
+        	//values.put(Images.Media.ORIENTATION,"");
+        	((WatchService)mContext).saveGallery(values);
+        }
     }
     
     

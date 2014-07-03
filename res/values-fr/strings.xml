@@ -18,7 +18,10 @@
 
 <string name="pref_gallery_title">Vérifiez l\'intrus</string>
 <string name="pref_gallery_summary">Voir l\'image capturée pour lancer la galerie</string>
-   
+
+<string name="pref_save_gallery_title">Masquer les images</string>
+<string name="pref_save_gallery_summary">Masquer les images de la galerie par défaut. S\'il vous plaît se référer images via cette application.</string>
+
 <string name="toast_read_error_message">Windows ne peut pas charger l\'image</string>
 <string name="toast_delete_error_message">Impossible de supprimer</string>
     

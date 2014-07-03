@@ -18,7 +18,10 @@
 
 <string name="pref_gallery_title">Controllare l\'intruso</string>
 <string name="pref_gallery_summary">Guarda l\'immagine catturata per lanciare la galleria</string>
-   
+
+<string name="pref_save_gallery_title">Nascondere le immagini</string>
+<string name="pref_save_gallery_summary">Nascondere immagini dalla galleria di default. Si prega di consultare le immagini tramite questa applicazione.</string>
+
 <string name="toast_read_error_message">Impossibile caricare l\'immagine</string>
 <string name="toast_delete_error_message">Impossibile eliminare</string>
     

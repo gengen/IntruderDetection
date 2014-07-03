@@ -234,18 +234,16 @@ public class MyGalleryActivity extends FragmentActivity {
     			Bitmap bmp = BitmapFactory.decodeStream(bufInput);
 
                 view.setImageBitmap(bmp);
-                
-                if(Locale.JAPAN.equals(Locale.getDefault())) {
-                	String date = getDateString(item.path);
-                	//Log.d(TAG, "date = " + date);
-                	TextView text = (TextView)findViewById(R.id.date);
-                	if(date != null){
-                		text.setText(date);
-                	}
-                	else{
-                		text.setText("");
-                	}
-                }
+
+                //日付表示
+            	String date = getDateString(item.path);
+            	TextView text = (TextView)findViewById(R.id.date);
+            	if(date != null){
+            		text.setText(date);
+            	}
+            	else{
+            		text.setText("");
+            	}
             }
         });
 
@@ -258,11 +256,18 @@ public class MyGalleryActivity extends FragmentActivity {
     		return null;
     	}
     	
-    	String yyyy = path.substring(length-21, length-17) + "/";
-    	String mmdd = path.substring(length-17, length-15) + "/" + path.substring(length-15, length-13) + " "; 
-    	String hhmm = path.substring(length-13, length-11) + ":" + path.substring(length-11, length-9);
+    	String yyyy = path.substring(length-21, length-17);
+    	String mm = path.substring(length-17, length-15);
+    	String dd = path.substring(length-15, length-13);
+    	String hh = path.substring(length-13, length-11);
+    	String min = path.substring(length-11, length-9);
     	
-    	return yyyy + mmdd + hhmm;
+        if(Locale.JAPAN.equals(Locale.getDefault())) {
+        	return yyyy + "/" + mm + "/" + dd + " " + hh + ":" + min;
+        }
+        else{//日本語以外
+        	return yyyy + "-" + mm + "-" + dd + " " + hh + ":" + min;
+        }
     }
     
     private void alertNotifyDialog(int size){
@@ -378,6 +383,10 @@ public class MyGalleryActivity extends FragmentActivity {
     private void deleteImageFile(String path){
     	//ギャラリーからの削除
     	getContentResolver().delete(Media.EXTERNAL_CONTENT_URI, Images.Media.DATA + " = ?", new String[]{path});
+    	
+    	//ギャラリーに保存されていない場合もある
+    	File file = new File(path);
+    	file.delete();
 
     	//削除対象の画像を表示中ならクリア
     	if(mCurImgPath.equals(path)){
